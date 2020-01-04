@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+*.mp4
+*.mov
+*.pbxproj
+ofLightPaintApp/ofLightPaintApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+ofLightPaintApp/ofLightPaintApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+ofLightPaintApp/ofLightPaintApp.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+ofLightPaintApp/ofLightPaintApp.xcodeproj/project.xcworkspace/xcuserdata/adminmac.xcuserdatad/UserInterfaceState.xcuserstate
+ofLightPaintApp/ofLightPaintApp.xcodeproj/xcshareddata/xcschemes/ofLightPaintApp Debug.xcscheme
+ofLightPaintApp/ofLightPaintApp.xcodeproj/xcshareddata/xcschemes/ofLightPaintApp Release.xcscheme
+ofLightPaintApp/ofLightPaintApp.xcodeproj/xcuserdata/adminmac.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
