@@ -37,6 +37,9 @@ public:
     void setVideoIndex(int &newIndex);
     void setVideoPause(bool &isPause);
     
+    //BLACK MAGIC
+    ofxBlackMagic blackMagic;
+    
     int w;
     int h;
     ofFbo fbo;
@@ -45,7 +48,7 @@ public:
     ofParameter<bool> useOfVideoPlayer;
     ofParameter<bool> playerPause;
     ofParameter<int> videoIndex;
-    ofParameter<float> threshold;
+    ofParameter<double> threshold;
     ofParameter<float> smooth;
     ofShader shader;
     

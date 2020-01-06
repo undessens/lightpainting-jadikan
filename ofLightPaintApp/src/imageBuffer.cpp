@@ -42,7 +42,7 @@ void ImageBuffer::setup(){
     
     pg->add(currentImage.set("Image index", 0, 0, nbImage));
     pg->add(reset.set("Reset", false));
-    pg->add(darkerInTime.set("Darker", 1, 0, 20));
+    pg->add(darkerInTime.set("Darker", 0, 0, 10));
     pg->add(opacityAtDraw.set("Opacity", 255, 100, 255));
     
     // FBO CLEAR

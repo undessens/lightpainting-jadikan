@@ -62,7 +62,7 @@ void main()
     }
 
     //outputColor = vec4(rgbColor.r, rgbColor.g, rgbColor.b, 1);
-    outputColor = vec4(rgbColor.r, 0, 0, 1);
+    outputColor = vec4(rgbColor.b, rgbColor.g, rgbColor.r, 1);
 
 
     gl_FragColor = outputColor;

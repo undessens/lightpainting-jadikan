@@ -41,28 +41,22 @@ void main()
     vec4 color;
     vec4 outputColor;
     color =  texture2DRect(tex0, texCoordVarying );
-    vec3 hsvColor = rgb2hsv(vec3(color.r, color.g, color.b));
-    vec3 rgbColor = hsv2rgb(hsvColor);
-    float transparent_value;
+    float squared_distance = dot(color,color);
     
-    
-    if (hsvColor.b > squared_threshold + squared_smooth )
+    if (squared_distance > squared_threshold + squared_smooth )
     {
-     transparent_value = 1;
+     outputColor = color;
     }
     else if (squared_distance > squared_threshold )
     {
         float alphaValue = (squared_distance - squared_threshold ) / squared_smooth;
-        transparent_value = alphaValue;
+        outputColor = vec4(color.r, color.g, color.b, alphaValue);
 
     }
     else    
     {
-     transparent_value = 0;
+     outputColor = vec4(0, 0, 0, 0);
     }
-
-    //outputColor = vec4(rgbColor.r, rgbColor.g, rgbColor.b, 1);
-    outputColor = vec4(rgbColor.r, 0, 0, 1);
 
 
     gl_FragColor = outputColor;

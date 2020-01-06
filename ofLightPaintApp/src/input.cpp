@@ -30,10 +30,13 @@ void Input::setup(){
     
     // GUI MANAGEMENT
     pg->add(useOfVideoPlayer.set("use of video", true));
-    pg->add(videoIndex.set("video index", 1, 1, 3));
-    pg->add(threshold.set("threshold", 0.1,0, 10.0));
+    pg->add(videoIndex.set("video index", 3, 1, 3));
+    pg->add(threshold.set("threshold", 0.1,0, 1.0));
     pg->add(smooth.set("smooth threshold", 0, 0, 5));
     pg->add(playerPause.set("Video Pause", false));
+    
+    //BLACK MAGIC
+    blackMagic.setup(w, h, 30);
     
     // FBO CLEAR
     fbo.allocate(w, h, GL_RGBA);
@@ -71,9 +74,8 @@ void Input::loadMovie(string name){
 //--------------------------------------------------------------
 void Input::update(){
     
- 
-     
-    
+    //Update blackmagic
+    blackMagic.update();
     
     fbo.begin();
     ofClear(255,255,255, 0);
@@ -86,7 +88,8 @@ void Input::update(){
         player.draw(0, 0, w, h);
         
     }else{
-        // USE of camera from black magic
+        ofSetColor(255, 255, 255, 255);
+        blackMagic.drawColor();
         ofSetColor(0, 255, 0, 255);
         ofFill();
         ofDrawRectangle(0, 0, w, h);

@@ -5,6 +5,7 @@
 #include "ofxGui.h"
 #include "input.hpp"
 #include "imageBuffer.hpp"
+#include "ofxSyphon.h"
 
 class ofApp : public ofBaseApp{
 
@@ -38,6 +39,14 @@ class ofApp : public ofBaseApp{
     ofParameterGroup pg_fx;
     ofParameterGroup pg_output;
     ofParameter<int> bg_color;
+    ofParameter<int> zoom_level;
+    
+    //Syphon output
+    ofxSyphonServer syphonOut;
+    ofTexture textureToPublish;
+    ofImage imgTest;
+    
+
     
     //IMAGE parameter
     int input_w;
@@ -52,12 +61,14 @@ class ofApp : public ofBaseApp{
     //Draw video on rectangle
     ofRectangle vignetteInput;
     ofRectangle vignetteBuffer;
+    ofRectangle vignetteFx;
     ofRectangle vignetteZoom;
     
     //Zoom : TODO, dedicated class is needed
     ofRectangle zoomRectangle;
     ofPixels zoomPixels;
     ofImage zoomImage;
+    ofImage transparentBg;
     int zoomLevelEntry;
     
     

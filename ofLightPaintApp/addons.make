@@ -1,3 +1,4 @@
 ofxBlackmagic
 ofxGui
 ofxOsc
+ofxSyphon
