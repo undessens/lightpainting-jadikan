@@ -40,9 +40,10 @@ void ImageBuffer::setup(){
     
     reset.addListener(this, &ImageBuffer::resetBuffer);
     
+    pg->setName("Image buffer");
     pg->add(currentImage.set("Image index", 0, 0, nbImage));
     pg->add(reset.set("Reset", false));
-    pg->add(darkerInTime.set("Darker", 0, 0, 10));
+    pg->add(darkerInTime.set("Darker", 0, 0, 255));
     pg->add(opacityAtDraw.set("Opacity", 255, 100, 255));
     
     // FBO CLEAR
@@ -56,19 +57,20 @@ void ImageBuffer::setup(){
 //--------------------------------------------------------------
 void ImageBuffer::update(ofFbo* input){
 
-    
-    
-    ofEnableAlphaBlending();
+
     fbo.begin();
-    
-    ofFill();
-    ofSetColor(0, 0, 0, darkerInTime);
-    ofDrawRectangle(0,0,w,h);
-    
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofSetColor(opacityAtDraw,opacityAtDraw,opacityAtDraw);
-    
     input->draw(0, 0);
+    ofDisableBlendMode();
+    fbo.end();
+    
+    fbo.begin();
+    ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+    ofFill();
+    ofSetColor(255-darkerInTime);
+    ofDrawRectangle(0,0,w,h);
+    ofDisableBlendMode();
     fbo.end();
     
     

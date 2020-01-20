@@ -43,14 +43,21 @@ public:
     int w;
     int h;
     ofFbo fbo;
+    ofFbo fboTresh;
+    ofFbo fboBlur1;
+    ofFbo fboBlur2;
     ofParameterGroup* pg;
     ofVideoPlayer player;
     ofParameter<bool> useOfVideoPlayer;
     ofParameter<bool> playerPause;
     ofParameter<int> videoIndex;
+    ofParameter<int> skipStep;
     ofParameter<double> threshold;
     ofParameter<float> smooth;
-    ofShader shader;
+    ofParameter<float> blur;
+    ofShader shaderTreshHsv;
+    ofShader shaderBlurX;
+    ofShader shaderBlurY;
     
     
 };

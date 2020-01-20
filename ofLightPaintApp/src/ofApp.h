@@ -5,7 +5,9 @@
 #include "ofxGui.h"
 #include "input.hpp"
 #include "imageBuffer.hpp"
+#include "mask.hpp"
 #include "ofxSyphon.h"
+#include "ofxPostProcessing.h"
 
 class ofApp : public ofBaseApp{
 
@@ -46,7 +48,6 @@ class ofApp : public ofBaseApp{
     ofTexture textureToPublish;
     ofImage imgTest;
     
-
     
     //IMAGE parameter
     int input_w;
@@ -57,11 +58,14 @@ class ofApp : public ofBaseApp{
     //Instance
     Input*  input;
     ImageBuffer* imageBuffer;
+    Mask* mask;
+    ofFbo fboPost;
     
     //Draw video on rectangle
     ofRectangle vignetteInput;
     ofRectangle vignetteBuffer;
     ofRectangle vignetteFx;
+    ofRectangle vignetteMask;
     ofRectangle vignetteZoom;
     
     //Zoom : TODO, dedicated class is needed

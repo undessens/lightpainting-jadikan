@@ -1,4 +1,5 @@
 ofxBlackmagic
 ofxGui
 ofxOsc
+ofxPostProcessing
 ofxSyphon

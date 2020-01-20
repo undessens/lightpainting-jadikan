@@ -23,6 +23,27 @@
  
  */
 
+
+/*
+ LIST OF OFX ADDONS THOUGHT
+ https://github.com/armadillu/ofxFboBlur
+ https://github.com/tado/ofxAlphaMaskTexture
+ 
+ 
+ */
+
+/*
+ RENCONTRE AVEC SYLVIE :
+ 
+ faire un shader d'impression.
+ on efface, l'image courante, mais ce qui a passé un certain seuil, ne bouge pas. en gros, ce qui est cramé reste cramé, le reste d'efface.
+ 
+ Afficher la valeur max de l'image d'entrée.
+ Car ça conditionne, la vitesse à laquelle on crame.
+ 
+ 
+ */
+
 /*
  ========================================
  HSV seems to be better than hsl
@@ -82,40 +103,43 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    input_w = 1280;
-    input_h = 720;
+    input_w = 1920;
+    input_h = 1080;
     ofBackground(100);
     
+    //INSTANCIATE ALL MODULE
     input = new Input(&pg_input, input_w, input_h);
     imageBuffer = new ImageBuffer(&pg_imageBuffer, input_w, input_h, 5);
+    mask= new Mask(&pg_mask, input_w, input_h);
+    
+    
+    //GUI
     pg.setName("main");
     pg.add(bg_color.set("BackGround", 35, 0, 255));
     pg.add(zoom_level.set("Zoom", 2, 1, 10));
     gui.setup(pg);
     gui.add(pg_input);
     gui.add(pg_imageBuffer);
+    gui.add(pg_mask);
     
     
     //Vignette setup
-    vignetteInput = ofRectangle(240, 40, 355, 200);
-    vignetteBuffer = ofRectangle(240, 320, 355, 200);
-    vignetteFx = ofRectangle(240, 560, 355, 200);
-    vignetteZoom = ofRectangle(690, 100, 355, 200);
+    vignetteInput = ofRectangle(240, 0, 355, 200);
+    vignetteBuffer = ofRectangle(240, 220, 355, 200);
+    vignetteFx = ofRectangle(690, 440, 355, 200);
+    vignetteMask = ofRectangle(240, 440, 355, 200);
+    vignetteZoom = ofRectangle(690, 0, 355, 200);
     zoomImage.allocate(vignetteZoom.width/2, vignetteZoom.height/2, OF_IMAGE_COLOR_ALPHA);
     zoomPixels.allocate(1920,1080, OF_IMAGE_COLOR_ALPHA );
     zoomPixels.setColor(ofColor::goldenRod);
     zoomRectangle = ofRectangle();
-    transparentBg.load("transparent.png");
+    fboPost.allocate(input_w, input_h, GL_RGBA);
+    transparentBg.load("transparent2.png");
     
     bool isZoomAllocated = zoomPixels.isAllocated();
     
-
-    
-    
     //SYPHON SETTINGS
     syphonOut.setName("palme");
-    imgTest.load("tof.jpg");
-    
     
     
 }
@@ -132,8 +156,13 @@ void ofApp::update(){
     input->update();
     imageBuffer->update(&(input->fbo));
     
+    mask->update(&imageBuffer->fbo);
     
+    fboPost.begin();
+    mask->draw(0,0,input_w,input_h);
+    fboPost.end();
     
+
     //Zoom updating
     float zoomRatioX = 0;
     float zoomRatioY = 0;
@@ -182,23 +211,17 @@ void ofApp::draw(){
    
     ofSetColor(255, 255, 255);
     ofFill();
-    syphonOut.publishTexture(&(imageBuffer->fbo.getTexture()));
+    syphonOut.publishTexture(&(mask->fbo.getTexture()));
 
-    
-    
     ofSetColor(255,255,255);
     gui.draw();
-    
-    
-    
+
     ofSetColor(0, 0, 255);
     ofNoFill();
     ofDrawRectangle(vignetteInput);
     ofSetColor(255,255,255);
+    transparentBg.draw(vignetteInput);
     input->fbo.draw(vignetteInput);
-    
-    
-    
     
     ofSetColor(0, 0, 255);
     ofNoFill();
@@ -207,6 +230,9 @@ void ofApp::draw(){
     imageBuffer->draw(vignetteBuffer);
      
     
+    ofSetColor(255, 0, 0);
+    ofNoFill();
+    ofDrawRectangle(zoomRectangle);
     
     ofSetColor(0, 0, 255);
     ofNoFill();
@@ -214,12 +240,22 @@ void ofApp::draw(){
     ofSetColor(255,255,255);
     transparentBg.draw(vignetteZoom);
     zoomImage.draw(vignetteZoom);
-     
     
-    
-    ofSetColor(255, 0, 0);
+    ofSetColor(0, 0, 255);
     ofNoFill();
-    ofDrawRectangle(zoomRectangle);
+    ofDrawRectangle(vignetteMask);
+    ofSetColor(255,255,255);
+    mask->draw(vignetteMask);
+    
+    ofSetColor(0, 255, 255);
+    ofNoFill();
+    ofDrawRectangle(vignetteFx);
+    ofSetColor(255,255,255);
+    fboPost.draw(vignetteFx);
+    
+    
+     
+
     
 
 

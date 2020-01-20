@@ -29,20 +29,38 @@ void Input::setup(){
     playerPause.addListener(this, &Input::setVideoPause);
     
     // GUI MANAGEMENT
+    pg->setName("Input");
     pg->add(useOfVideoPlayer.set("use of video", true));
     pg->add(videoIndex.set("video index", 3, 1, 3));
     pg->add(threshold.set("threshold", 0.1,0, 1.0));
     pg->add(smooth.set("smooth threshold", 0, 0, 5));
     pg->add(playerPause.set("Video Pause", false));
+    pg->add(blur.set("blur", 0, 0, 10));
+    pg->add(skipStep.set("Skip step", 0, 0, 3));
     
     //BLACK MAGIC
-    blackMagic.setup(w, h, 30);
+    blackMagic.setup(1920, 1080, 30);
     
     // FBO CLEAR
     fbo.allocate(w, h, GL_RGBA);
     fbo.begin();
     ofClear(255,255,255, 0);
     fbo.end();
+    // FBO CLEAR
+    fboTresh.allocate(w, h, GL_RGBA);
+    fboTresh.begin();
+    ofClear(255,255,255, 0);
+    fboTresh.end();
+    // FBO CLEAR
+    fboBlur1.allocate(w, h, GL_RGBA);
+    fboBlur1.begin();
+    ofClear(255,255,255, 0);
+    fboBlur1.end();
+    // FBO CLEAR
+    fboBlur2.allocate(w, h, GL_RGBA);
+    fboBlur2.begin();
+    ofClear(255,255,255, 0);
+    fboBlur2.end();
     
     // SHADER
 #ifdef TARGET_OPENGLES
@@ -52,7 +70,9 @@ void Input::setup(){
         //shader.load("shadersGL3/shader");
 
     }else{
-        shader.load("shadersGL2/shader");
+        shaderTreshHsv.load("shadersGL2/shaderTreshHsv");
+        shaderBlurX.load("shadersGL2/shaderBlurX");
+        shaderBlurY.load("shadersGL2/shaderBlurY");
 
     }
 #endif
@@ -77,11 +97,13 @@ void Input::update(){
     //Update blackmagic
     blackMagic.update();
     
-    fbo.begin();
+    
+    //Threshold
+    fboTresh.begin();
     ofClear(255,255,255, 0);
-    shader.begin();
-    shader.setUniform1f("squared_threshold", threshold);
-    shader.setUniform1f("squared_smooth", smooth);
+    shaderTreshHsv.begin();
+    shaderTreshHsv.setUniform1f("squared_threshold", threshold);
+    shaderTreshHsv.setUniform1f("squared_smooth", smooth);
     if(useOfVideoPlayer){
         player.update();
         ofSetColor(255, 255, 255, 255);
@@ -90,12 +112,57 @@ void Input::update(){
     }else{
         ofSetColor(255, 255, 255, 255);
         blackMagic.drawColor();
-        ofSetColor(0, 255, 0, 255);
-        ofFill();
-        ofDrawRectangle(0, 0, w, h);
+        //ofSetColor(0, 255, 0, 255);
+        //ofFill();
+        //ofDrawRectangle(0, 0, w, h);
     }
-    shader.end();
-    fbo.end();
+    shaderTreshHsv.end();
+    fboTresh.end();
+    
+    // BLUR 1
+    fboBlur1.begin();
+    ofClear(255,255,255, 0);
+    ofEnableAlphaBlending();
+    shaderBlurX.begin();
+    shaderBlurX.setUniform1f("blurAmnt", blur);
+    fboTresh.draw(0, 0);
+    shaderBlurX.end();
+    ofDisableAlphaBlending();
+    fboBlur1.end();
+    
+    // BLUR 2
+    fboBlur2.begin();
+    ofClear(255,255,255, 0);
+    ofEnableAlphaBlending();
+    shaderBlurY.begin();
+    shaderBlurY.setUniform1f("blurAmnt", blur);
+    fboBlur1.draw(0, 0);
+    shaderBlurY.end();
+    ofDisableAlphaBlending();
+    fboBlur2.end();
+    
+    // FINAL 2
+    fbo.begin();
+    ofClear(255,255,255, 0);
+    ofEnableAlphaBlending();
+    switch (skipStep) {
+        case 0:
+            fboBlur2.draw(0,0);
+            break;
+        case 1:
+            fboBlur1.draw(0,0);
+            break;
+        case 2:
+            fboTresh.draw(0,0);
+            break;
+            
+        default:
+            break;
+    }
+    ofDisableAlphaBlending();
+    fboBlur2.end();
+    
+
     
     
     
