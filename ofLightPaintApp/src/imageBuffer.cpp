@@ -59,7 +59,7 @@ void ImageBuffer::update(ofFbo* input){
 
 
     fbo.begin();
-    ofEnableBlendMode(OF_BLENDMODE_RESET);
+    ofEnableBlendMode(OF_BLENDMODE_SCREEN);
     ofSetColor(opacityAtDraw,opacityAtDraw,opacityAtDraw);
     input->draw(0, 0);
     ofDisableBlendMode();
