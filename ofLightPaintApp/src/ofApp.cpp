@@ -90,10 +90,7 @@
  return vec3(abs(q.z+(q.w-q.y)/(6.*d+e)),d/(q.x+e),q.x);
  }
  
- 
- 
- 
- 
+
  */
 
 
@@ -149,9 +146,7 @@ void ofApp::setup(){
 void ofApp::update(){
     
     ofEnableAlphaBlending();
-    
 
-    
     //update module one by one
     input->update();
     imageBuffer->update(&(input->fbo));
@@ -162,7 +157,6 @@ void ofApp::update(){
     mask->draw(0,0,input_w,input_h);
     fboPost.end();
     
-
     //Zoom updating
     float zoomRatioX = 0;
     float zoomRatioY = 0;
